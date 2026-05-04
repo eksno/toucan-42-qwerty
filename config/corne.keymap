@@ -1,0 +1,154 @@
+/*
+ * Copyright (c) 2020 The ZMK Contributors
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
+#include <behaviors.dtsi>
+#include <dt-bindings/zmk/bt.h>
+#include <dt-bindings/zmk/keys.h>
+
+/ {
+    behaviors {
+        hm: homerow_mods {
+            compatible = "zmk,behavior-hold-tap";
+            label = "HOMEROW_MODS";
+            bindings = <&kp>, <&kp>;
+
+            #binding-cells = <2>;
+            tapping-term-ms = <200>;
+            flavor = "tap-preferred";
+            require-prior-idle-ms = <125>;
+            quick-tap-ms = <200>;
+        };
+
+        shifthr: shifthr {
+            compatible = "zmk,behavior-hold-tap";
+            label = "SHIFTHR";
+            bindings = <&kp>, <&kp>;
+
+            #binding-cells = <2>;
+            tapping-term-ms = <185>;
+            flavor = "tap-preferred";
+            quick-tap-ms = <185>;
+        };
+
+        weak: weak {
+            compatible = "zmk,behavior-hold-tap";
+            label = "WEAK";
+            bindings = <&kp>, <&kp>;
+
+            #binding-cells = <2>;
+            tapping-term-ms = <230>;
+            flavor = "tap-preferred";
+            require-prior-idle-ms = <125>;
+            quick-tap-ms = <230>;
+        };
+
+        backspace: backspace {
+            compatible = "zmk,behavior-tap-dance";
+            label = "BACKSPACE";
+            #binding-cells = <0>;
+            bindings = <&kp BACKSPACE>, <&kp LC(BACKSPACE)>;
+        };
+    };
+
+    combos {
+        compatible = "zmk,combos";
+
+        caps {
+            bindings = <&kp CAPS>;
+            key-positions = <16 19>;
+        };
+
+        jk_fix {
+            bindings = <&kp ESCAPE>;
+            key-positions = <31 32>;
+        };
+
+        under {
+            bindings = <&kp UNDER>;
+            key-positions = <28 31>;
+        };
+
+        dash {
+            bindings = <&kp MINUS>;
+            key-positions = <4 7>;
+        };
+    };
+
+    macros {
+        save: save {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&macro_tap>, <&kp ESCAPE &kp COLON &kp W &kp ENTER>;
+
+            label = "SAVE";
+        };
+
+        email: email {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&none &kp J &kp O &kp S &kp H &kp AT &kp J &kp O &kp S &kp H &kp B &kp L &kp A &kp I &kp S &kp DOT &kp C &kp O &kp M>;
+            label = "EMAIL";
+        };
+    };
+
+    keymap {
+        compatible = "zmk,keymap";
+
+        home {
+            // -----------------------------------------------------------------------------------------
+            // |  TAB |  Q  |  W  |  E  |  R  |  T  |   |  Y  |  U   |  I  |  O  |  P  | BKSP |
+            // | CTRL |  A  |  S  |  D  |  F  |  G  |   |  H  |  J   |  K  |  L  |  ;  |  '   |
+            // | SHFT |  Z  |  X  |  C  |  V  |  B  |   |  N  |  M   |  ,  |  .  |  /  | ESC  |
+            //                    | GUI | LWR | SPC |   | ENT | RSE  | ALT |
+
+            bindings = <
+&none  &kp SEMICOLON    &kp COMMA            &kp PERIOD               &kp P                  &kp Y        &kp F        &kp G              &kp C             &kp R                 &kp L            &none
+&none  &shifthr LGUI A  &shifthr LEFT_ALT O  &shifthr LEFT_CONTROL E  &shifthr LEFT_SHIFT U  &kp I        &kp D        &shifthr RSHIFT H  &shifthr RCTRL T  &shifthr RIGHT_ALT N  &shifthr LGUI S  &none
+&none  &kp SQT          &kp Q                &kp J                    &kp K                  &kp X        &kp B        &kp M              &kp W             &kp V                 &kp Z            &none
+                                             &kp ESCAPE               &lt 1 BACKSPACE        &lt 2 TAB    &lt 2 ENTER  &lt 1 SPACE        &lt 3 LGUI
+            >;
+
+            label = "home";
+        };
+
+        num {
+            // -----------------------------------------------------------------------------------------
+            // |  TAB |  !  |  @  |  #  |  $  |  %  |   |  ^  |  &  |  *  |  (  |  )  | BKSP |
+            // | CTRL |     |     |     |     |     |   |  -  |  =  |  [  |  ]  |  \  |  `   |
+            // | SHFT |     |     |     |     |     |   |  _  |  +  |  {  |  }  | "|" |  ~   |
+            //                    | GUI |     | SPC |   | ENT |     | ALT |
+
+            bindings = <
+&none  &kp EXCL            &kp AT               &kp LEFT_BRACE              &kp RIGHT_BRACE                   &kp PIPE     &kp PLUS   &kp NUMBER_7  &kp N8        &kp N9                    &kp ASTERISK   &none
+&none  &hm LEFT_META HASH  &hm LEFT_ALT DOLLAR  &hm LCTRL LEFT_PARENTHESIS  &hm LEFT_SHIFT RIGHT_PARENTHESIS  &kp GRAVE    &kp MINUS  &kp NUMBER_4  &kp NUMBER_5  &kp NUMBER_6              &kp COLON      &none
+&none  &kp PERCENT         &kp CARET            &kp LEFT_BRACKET            &kp RIGHT_BRACKET                 &kp TILDE    &kp EQUAL  &kp NUMBER_1  &kp NUMBER_2  &shifthr PERIOD NUMBER_3  &kp BACKSLASH  &none
+                                                &kp SLASH                   &kp LC(BACKSPACE)                 &kp DEL      &kp RET    &kp SPACE     &kp N0
+            >;
+
+            label = "num";
+        };
+
+        nav {
+            bindings = <
+&trans  &kp F1            &kp F2           &kp F3        &kp F4             &trans             &trans  &kp LS(H)  &kp PG_DN    &kp PG_UP  &kp LS(L)  &trans
+&trans  &hm LEFT_META F5  &hm LEFT_ALT F6  &hm LCTRL F7  &hm LEFT_SHIFT F8  &hm LC(V) LC(C)    &trans  &kp LEFT   &kp DOWN     &kp UP     &kp RIGHT  &trans
+&trans  &kp F9            &kp F10          &kp F11       &kp F12            &kp PSCRN          &trans  &kp LA(H)  &kp LA(TAB)  &trans     &kp LA(L)  &trans
+                                           &bt BT_CLR    &bt BT_NXT         &trans             &trans  &trans     &trans
+            >;
+
+            label = "nav";
+        };
+
+        spaces {
+            bindings = <
+&trans  &trans     &trans     &trans     &trans          &trans       &trans     &kp LG(G)  &kp LG(C)  &kp LG(R)  &kp LG(L)  &trans
+&trans  &kp LG(A)  &kp LG(O)  &kp LG(E)  &kp LG(U)       &kp LG(I)    &kp LG(D)  &kp LG(H)  &kp LG(T)  &kp LG(N)  &kp LG(S)  &trans
+&trans  &trans     &trans     &trans     &trans          &trans       &trans     &kp LG(M)  &kp LG(W)  &trans     &trans     &trans
+                              &trans     &kp LEFT_SHIFT  &trans       &trans     &trans     &trans
+            >;
+        };
+    };
+};
