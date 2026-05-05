@@ -3,3 +3,6 @@
 /zephyr
 /zmk
 /build
+/result
+/keymap.pdf
+/.claude/
