@@ -2,4 +2,7 @@ on: [push, pull_request, workflow_dispatch]
 
 jobs:
   build:
-    uses: zmkfirmware/zmk/.github/workflows/build-user-config.yml@main
+    # Pinned to v0.3 to match the ZMK version in config/west.yml. The @main build
+    # workflow runs `west boards --format {qualifiers}`, which the v0.3-era Zephyr's
+    # boards.py doesn't support -> KeyError: 'qualifiers'. @v0.3 matches that Zephyr.
+    uses: zmkfirmware/zmk/.github/workflows/build-user-config.yml@v0.3
