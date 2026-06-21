@@ -73,8 +73,21 @@
       };
     });
 
-    devShells = forAllSystems (system: {
-      default = zmk-nix.devShells.${system}.default;
+    devShells = forAllSystems (system: let
+      pkgs = nixpkgs.legacyPackages.${system};
+      # ZMK Studio's build runs nanopb's protobuf codegen, whose protoc wrapper
+      # imports pkg_resources (setuptools) and google.protobuf. Depending on which
+      # interpreter CMake resolves, those can be missing in a local `west` build
+      # -> "No module named 'pkg_resources'". Put them on PYTHONPATH so any python3
+      # the build invokes finds them. (Only affects the dev shell / build.sh; the
+      # `nix build` package path handles this itself.)
+      studioPyPath = "${pkgs.python3Packages.setuptools}/${pkgs.python3.sitePackages}:${pkgs.python3Packages.protobuf}/${pkgs.python3.sitePackages}";
+    in {
+      default = zmk-nix.devShells.${system}.default.overrideAttrs (old: {
+        shellHook = (old.shellHook or "") + ''
+          export PYTHONPATH="${studioPyPath}''${PYTHONPATH:+:''${PYTHONPATH}}"
+        '';
+      });
     });
   };
 }
