@@ -1,0 +1,11 @@
+# Drives the GitHub Actions firmware build (zmkfirmware/build-user-config).
+# Every push produces a downloadable "firmware" artifact containing both halves'
+# .uf2 files — the easy, no-Nix way to get firmware to flash. ZMK Studio (live
+# keymap editing) is enabled on the left/central half.
+include:
+  - board: seeeduino_xiao_ble
+    shield: toucan_left rgbled_adapter nice_view_gem
+    snippet: studio-rpc-usb-uart
+    cmake-args: -DCONFIG_ZMK_STUDIO=y
+  - board: seeeduino_xiao_ble
+    shield: toucan_right rgbled_adapter
